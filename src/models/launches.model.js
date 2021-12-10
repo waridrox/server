@@ -15,6 +15,10 @@ const launch = {
 
 launches.set(launch.flightNumber, launch)
 
+function existsLaunchWithId(launchId) {
+    return launches.has(launchId)
+}
+
 function getAllLaunches() {
     return Array.from(launches.values())
 }
@@ -33,7 +37,12 @@ function addNewLaunch(launch) { //launch as param that needs to be added to our 
     )
 }
 
+function abortLaunchById(launchId) {
+}
+
 module.exports = {
     getAllLaunches,
     addNewLaunch,
+    existsLaunchWithId,
+    abortLaunchById,
 }
