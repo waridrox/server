@@ -38,6 +38,10 @@ function addNewLaunch(launch) { //launch as param that needs to be added to our 
 }
 
 function abortLaunchById(launchId) {
+    const aborted = launches.get(launchId)
+    aborted.upcoming = false
+    aborted.success = false
+    return aborted
 }
 
 module.exports = {
