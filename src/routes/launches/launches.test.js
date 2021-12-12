@@ -25,6 +25,13 @@ describe('Test POST /launch', () => {
         target: 'Kepler-186 f',
     }
 
+    const launchDataWithInvalidDate = {
+        mission: 'USS Enterprise',
+        rocket: 'Starship 11',
+        target: 'Kepler-186 f',
+        launchDate: 'what?',
+    }
+
     test('It should respond with 201 created', async () => {
         const response = await request(app)
             .post('/launches')
@@ -39,11 +46,27 @@ describe('Test POST /launch', () => {
         expect(response.body).toMatchObject(launchDataWithoutDate)
     })
 
-    test('It should catch missing required properties', () => {
+    test('It should catch missing required properties', async () => {
+        const response = await request(app)
+            .post('/launches')
+            .send(launchDataWithoutDate)
+            .expect('Content-Type', /json/)
+            .expect(400)
 
+        expect(response.body).toStrictEqual({
+            error: 'Missing required launch property',
+        })
     })
 
-    test('It should catch invalid dates', () => {
+    test('It should catch invalid dates', async () => {
+        const response = await request(app)
+            .post('/launches')
+            .send(launchDataWithInvalidDate)
+            .expect('Content-Type', /json/)
+            .expect(400)
 
+        expect(response.body).toStrictEqual({
+            error: 'Invalid launch date',
+        })
     })
 })
