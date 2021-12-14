@@ -8,7 +8,7 @@ const launch = {
     rocket: 'Endurance',
     launchDate: new Date('December 25, 2040'),
     target: 'Kepler-442 b',
-    customer: ['SpaceX', 'NASA'],
+    customers: ['SpaceX', 'NASA'],
     upcoming: true,
     success: true,
 }
@@ -31,7 +31,7 @@ function addNewLaunch(launch) { //launch as param that needs to be added to our 
         Object.assign(launch, {
             success: true,
             upcoming: true,
-            customer: ['SpaceX', 'NAShA'],
+            customers: ['SpaceX', 'NAShA'],
             flightNumber: latestFlightNumber,
         })
     )
