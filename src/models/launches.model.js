@@ -12,7 +12,7 @@ const launch = {
     mission: 'Kepler Exploration X',
     rocket: 'Endurance',
     launchDate: new Date('December 25, 2040'),
-    target: 'Aneesha Sharma',
+    target: 'Kepler-442 b', //if there is another planet that is not in the database, it is automatically handled.
     customers: ['SpaceX', 'NASA'],
     upcoming: true,
     success: true,
@@ -65,18 +65,18 @@ async function saveLaunch(launch) {
 
 saveLaunch(launch)
 
-function addNewLaunch(launch) { //launch as param that needs to be added to our collection
-    latestFlightNumber++
+async function scheduleNewLaunch(launch) {
+    const newFlightNumber = await getLatestFlightNumber() + 1
 
-    launches.set(
-        latestFlightNumber, 
-        Object.assign(launch, {
-            success: true,
-            upcoming: true,
-            customers: ['SpaceX', 'NAShA'],
-            flightNumber: latestFlightNumber,
-        })
-    )
+    const newLaunch = Object.assign(launch, {
+        success: true, 
+        upcoming: true, 
+        customers: ['SpaceX', 'NAShA'],
+        flightNumber: newFlightNumber,
+    })
+
+    //saving the new launch data by passing in the value of the new object
+    await saveLaunch(newLaunch)
 }
 
 function abortLaunchById(launchId) {
@@ -88,7 +88,7 @@ function abortLaunchById(launchId) {
 
 module.exports = {
     getAllLaunches,
-    addNewLaunch,
+    scheduleNewLaunch,
     existsLaunchWithId,
     abortLaunchById,
 }

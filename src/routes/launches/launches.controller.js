@@ -1,4 +1,4 @@
-const { getAllLaunches, addNewLaunch, existsLaunchWithId, abortLaunchById } = require('../../models/launches.model')
+const { getAllLaunches, scheduleNewLaunch, existsLaunchWithId, abortLaunchById } = require('../../models/launches.model')
 
 //Get request
 async function httpGetAllLaunches (req, res) {
@@ -6,7 +6,7 @@ async function httpGetAllLaunches (req, res) {
 }
 
 //Post request
-function httpAddNewLaunch (req, res) {
+async function httpAddNewLaunch (req, res) {
     const launch = req.body //since express will return the JSON body.
 
     if (!launch.mission || !launch.rocket || !launch.launchDate || !launch.target) {
@@ -23,7 +23,7 @@ function httpAddNewLaunch (req, res) {
         })
     }
 
-    addNewLaunch(launch)
+    await scheduleNewLaunch(launch)
     //sending the launch object
 
     return res.status (201).json(launch)
