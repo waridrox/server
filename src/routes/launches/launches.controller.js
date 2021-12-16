@@ -42,9 +42,16 @@ async function httpAbortLaunch (req, res) {
     }
 
     //if the launch does exist
-    const aborted = abortLaunchById(launchId)
-    console.log(aborted);
-    return res.status(200).json(aborted)
+    const aborted = await abortLaunchById(launchId)
+
+    if (!aborted) {
+        return res.status(400).json({
+            error: 'Launch not aborted!'
+        })
+    }
+    return res.status(200).json({
+        ok: true,
+    })
 }
 
 module.exports = {
