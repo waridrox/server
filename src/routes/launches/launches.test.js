@@ -26,20 +26,20 @@ describe('Launches API', () => {
         const completeLaunchData = {
             mission: 'USS Enterprise',
             rocket: 'Starship 11',
-            target: 'Kepler-186 f',
+            target: 'Kepler-62 f',
             launchDate: 'May 16, 2026',
         }
     
         const launchDataWithoutDate = {
             mission: 'USS Enterprise',
             rocket: 'Starship 11',
-            target: 'Kepler-186 f',
+            target: 'Kepler-62 f',
         }
     
         const launchDataWithInvalidDate = {
             mission: 'USS Enterprise',
             rocket: 'Starship 11',
-            target: 'Kepler-186 f',
+            target: 'Kepler-62 f',
             launchDate: 'what?',
         }
     
