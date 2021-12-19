@@ -1,28 +1,21 @@
+const axios = require('axios')
+
 const launchesDatabase = require('./launches.mongo')
 const planets = require('./planets.mongo')
 
 const DEFAULT_FLIGHT_NUMBER = 100
 
-// const launches = new Map()
-
-let latestFlightNumber = 100
-
 const launch = {
-    flightNumber: 100,
-    mission: 'Kepler Exploration X',
-    rocket: 'Endurance',
-    launchDate: new Date('December 25, 2040'),
-    target: 'Kepler-442 b', //if there is another planet that is not in the database, it is automatically handled.
-    customers: ['SpaceX', 'NASA'],
-    upcoming: true,
-    success: true,
+    flightNumber: 100, //corresponds to `flight_number`
+    mission: 'Kepler Exploration X', //corresponds to `name`
+    rocket: 'Endurance', //corresponds to `rocket.name`
+    launchDate: new Date('December 25, 2040'), //corresponds to `date_local`
+    target: 'Kepler-442 b', //this property is not applicable in the spacex api //if there is another planet that is not in the database, it is automatically handled.
+    customers: ['SpaceX', 'NASA'], //comes from payload.customers for each payload
+    upcoming: true, //coresponds to `upcoming`
+    success: true, //corresponds to `success`
 }
 
-// launches.set(launch.flightNumber, launch)
-
-// function existsLaunchWithId(launchId) {
-//     return launches.has(launchId)
-// }
 
 async function existsLaunchWithId(launchId) {
     return await launchesDatabase.findOne({
@@ -71,6 +64,31 @@ async function saveLaunch(launch) {
 
 saveLaunch(launch)
 
+const SPACEX_API_URL = 'https://api.spacexdata.com/v4/launches/query'
+
+async function loadLaunchData() {
+    console.log('Downloading SpaceX launch data from API');
+    const response = await axios.post(SPACEX_API_URL, {
+        query: {},
+        options: {
+            populate: [
+                {
+                    path: 'rocket',
+                    select: {
+                        'name': 1
+                    }
+                },
+                {
+                    path: 'payloads',
+                    select: {
+                        'customers': 1
+                    }
+                }
+            ]
+        }
+    })
+}
+
 async function scheduleNewLaunch(launch) {
     const newFlightNumber = await getLatestFlightNumber() + 1
 
@@ -96,8 +114,9 @@ async function abortLaunchById(launchId) {
 }
 
 module.exports = {
+    loadLaunchData,
+    existsLaunchWithId,
     getAllLaunches,
     scheduleNewLaunch,
-    existsLaunchWithId,
     abortLaunchById,
 }
