@@ -5,23 +5,12 @@ const planets = require('./planets.mongo')
 
 const DEFAULT_FLIGHT_NUMBER = 100
 
-const launch = {
-    flightNumber: 100, //corresponds to `flight_number`
-    mission: 'Kepler Exploration X', //corresponds to `name`
-    rocket: 'Endurance', //corresponds to `rocket.name`
-    launchDate: new Date('December 25, 2040'), //corresponds to `date_local`
-    target: 'Kepler-442 b', //this property is not applicable in the spacex api //if there is another planet that is not in the database, it is automatically handled.
-    customers: ['SpaceX', 'NASA'], //comes from payload.customers for each payload
-    upcoming: true, //coresponds to `upcoming`
-    success: true, //corresponds to `success`
-}
-
 async function findLaunch(filter) {
     return await launchesDatabase.findOne(filter)
 }
 
 async function existsLaunchWithId(launchId) {
-    return await findLaunch({
+    return await findLaunch({ 
         flightNumber: launchId
     })
 }
@@ -43,6 +32,7 @@ async function getAllLaunches(skip, limit) {
         .find({}, {
             '_id': 0, '__v': 0
         })
+        .sort({ flightNumber: 1 })
         .skip(skip)
         .limit(limit)
 }
@@ -57,8 +47,6 @@ async function saveLaunch(launch) {
     }
     )
 }
-
-saveLaunch(launch)
 
 const SPACEX_API_URL = 'https://api.spacexdata.com/v4/launches/query'
 
